@@ -1,1 +1,6 @@
-{"leaderboards":[{"name":"DemoSceneLeaderboard","publicKey":"980324f10e2f03fc0fd6a38a70f88123919a6aed35a4aea86211ad58b68db9c4","secretKey":"SECRET KEY NOT PROVIDED DUE TO SECURITY REASONS"}]}
+{
+  "leaderboards": [
+    { "name": "Space", "publicKey": "ef446c4219b3e7b3d23edddbc182f71ecd1d35fa0f181e2f33647219503f7547" },
+    { "name": "DemoSceneLeaderboard", "publicKey": "980324f10e2f03fc0fd6a38a70f88123919a6aed35a4aea86211ad58b68db9c4" }
+  ]
+}
