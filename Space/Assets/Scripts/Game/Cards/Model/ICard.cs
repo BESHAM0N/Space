@@ -19,5 +19,7 @@ namespace SpaceGame
         void InitializeFromPrototype(CardPrototype prototype);
 
         IReadOnlyList<SuitInteractionRule> GetInteractions();
+        
+        void CopyFrom(ICard card);
     }
 }

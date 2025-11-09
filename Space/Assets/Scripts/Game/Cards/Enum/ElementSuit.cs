@@ -2,11 +2,11 @@
 {
     public enum ElementSuit
     {
-        Fire,
+        Fire, 
         Water,
         Air,
+        Animals,
         Electricity,
-        Animal,
-        Props
+        Prop
     }
 }

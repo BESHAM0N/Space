@@ -6,25 +6,34 @@ namespace SpaceGame
     public sealed class ScoreIncreaseObserver :  IInitializable, IDisposable
     {
         private readonly IScore _score;
+        private readonly IScoreEvents _events;
+        private readonly ILeaderboard _leaderboard;
 
-        public ScoreIncreaseObserver(IScore score)
+        public ScoreIncreaseObserver(IScore score, ILeaderboard leaderboard, IScoreEvents events)
         {
             _score = score;
+            _leaderboard = leaderboard;
+            _events = events;
         }
         
         public void Initialize()
         {
-            //TODO: Подписка на начисление баллов 
+            _score.Load();
+            _events.LevelFinished += OnLevelFinished;
         }
 
         public void Dispose()
         {
-            //TODO: Отписка от начисление баллов 
+            _events.LevelFinished -= OnLevelFinished;
         }
         
-        private void OnAddScore()
+        private void OnLevelFinished(int levelScore)
         {
-            _score.AddScore();
+            _score.Add(levelScore);
+          
+            var name = _leaderboard.GetSavedPlayerName();
+            if (!string.IsNullOrEmpty(name))
+                _leaderboard.UpdateUserScoreIfHigher(name, _score.GetCurrentScore());
         }
     } 
 }

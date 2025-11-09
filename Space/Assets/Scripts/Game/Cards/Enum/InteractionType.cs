@@ -2,9 +2,9 @@
 {
     public enum InteractionType
     {
-        Non,
-        Bonus,          // даёт бонус к очкам
-        Destroys,       // уничтожает следующую карту
-        Absorption    // первая заменяет вторую карту
+        None,
+        Absorption, // первая заменяет вторую карту
+        Destroys, // уничтожает следующую карту
+        Bonus, // дает бонус к очкам
     }
 }

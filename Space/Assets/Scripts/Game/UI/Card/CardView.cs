@@ -1,13 +1,14 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace SpaceGame
 {
     public sealed class CardView : MonoBehaviour
     {
         public ICard Card => _card;
-        
+
         [SerializeField] private Image _image;
         [SerializeField] private TMP_Text _titleText;
         [SerializeField] private TMP_Text _pointsText;
@@ -15,7 +16,7 @@ namespace SpaceGame
         [SerializeField] private SuitIcons _suitIcons;
 
         private ICard _card;
-        
+
         public void Initialize(ICard card)
         {
             _image.sprite = card.Image;
@@ -24,5 +25,7 @@ namespace SpaceGame
             _suitIcon.sprite = _suitIcons.GetIcon(card.Suit);
             _card = card;
         }
+        
+        public class Factory : PlaceholderFactory<CardView> { }
     }
 }

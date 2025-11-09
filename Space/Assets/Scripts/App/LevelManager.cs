@@ -1,24 +1,26 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
+using Zenject;
 
 namespace SpaceGame
 {
-    public sealed class LevelManager : MonoBehaviour
+    public sealed class LevelManager : IInitializable
     {
-        [SerializeField] private ListCardPrototypes _listCardPrototypes;
-        [SerializeField] private CardFactory _cardFactory;
-        [SerializeField] private Transform _handParent; 
-        
-        private List<Card> _cards;
-        private List<CardView> _views;
-        
-        private void Start()
-        {
-            // 1) сборка моделей
-            _cards = _cardFactory.BuildModels(_listCardPrototypes);
+        private readonly DeckService _deck;
+        private readonly ICardFactory _factory;
 
-            // 2) сборка вьюшек
-            _views = _cardFactory.CreateViews(_cards, _handParent);
+        private List<Card> _levelCards;
+        private List<CardView> _views;
+
+        public LevelManager(DeckService deck, ICardFactory factory)
+        {
+            _deck = deck;
+            _factory = factory;
+        }
+
+        public void Initialize()
+        {
+            _levelCards = _deck.DealRandom(10);
+            _views = _factory.CreateViews(_levelCards);
         }
     }
 }

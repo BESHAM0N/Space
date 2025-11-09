@@ -1,73 +1,85 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace SpaceGame
 {
     [RequireComponent(typeof(RectTransform))]
-    [RequireComponent(typeof(CanvasGroup))]
-    public sealed class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public sealed class CardDragHandler : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler,
+        IBeginDragHandler
     {
-        [Header("Настройки")]
-        [Tooltip("Canvas (RectTransform) поверх всего UI, куда временно переносим карту во время drag.")]
-        [SerializeField] private RectTransform _dragCanvas;
-
-        private RectTransform _rt;
-        private CanvasGroup _cg;
+        private RectTransform _dragLayer;
         private Transform _originalParent;
-        private Vector2 _originalAnchoredPos;
-        
-        private LayoutElement _placeholder;
+
+        private Vector2 _touchOffset;
+        private Vector2 _originalWorldPos;
+        private CanvasGroup _canvasGroup;
+
+        public event Action Dragged;
+        public event Action Dropped;
 
         private void Awake()
         {
-            _rt = GetComponent<RectTransform>();
-            _cg = GetComponent<CanvasGroup>();
+            _canvasGroup = GetComponent<CanvasGroup>();
+            var dragCanvasObj = GameObject.Find("DragCanvas");
+            _dragLayer = dragCanvasObj.GetComponent<RectTransform>();
+            _originalParent = transform.parent;
+            _originalWorldPos = transform.position;
         }
 
         public void OnBeginDrag(PointerEventData eventData)
-        {
-            _originalParent = transform.parent;
-            _originalAnchoredPos = _rt.anchoredPosition;
-          
-            var ph = new GameObject("Placeholder", typeof(RectTransform), typeof(LayoutElement));
-            var phRt = (RectTransform)ph.transform;
-            phRt.SetParent(_originalParent, false);
-            phRt.SetSiblingIndex(transform.GetSiblingIndex());
-            _placeholder = ph.GetComponent<LayoutElement>();
-           
-            _cg.blocksRaycasts = false;
-           
-            transform.SetParent(_dragCanvas, worldPositionStays: false);
+        { 
+            if (transform.parent.TryGetComponent(out BoardSlotView slot))
+                slot.Controller.TryRemoveFromUI(slot.SlotIndex);
+            
+            if (_dragLayer != null)
+                transform.SetParent(_dragLayer, true);
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    _dragCanvas, eventData.position, eventData.pressEventCamera, out var local))
-            {
-                _rt.anchoredPosition = local;
-            }
+            RefreshPosition(eventData);
+            Dragged?.Invoke();
         }
 
-        public void OnEndDrag(PointerEventData eventData)
+        public void OnPointerDown(PointerEventData eventData)
         {
-            _cg.blocksRaycasts = true;
-           
-            if (transform.parent == _dragCanvas)
-                ReturnToOriginalParent();
-          
-            if (_placeholder != null)
-            {
-                Destroy(_placeholder.gameObject);
-                _placeholder = null;
-            }
+            if (_canvasGroup) _canvasGroup.blocksRaycasts = false;
+
+            _touchOffset = (Vector2)transform.position - eventData.position;
+            RefreshPosition(eventData);
+            Dragged?.Invoke();
         }
 
-        public void ReturnToOriginalParent()
+        public void OnPointerUp(PointerEventData eventData)
         {
-            transform.SetParent(_originalParent, false);
-            _rt.anchoredPosition = _originalAnchoredPos;
+            RefreshPosition(eventData);
+
+            if (transform.parent == _dragLayer)
+                transform.SetParent(_originalParent, true);
+
+            Dropped?.Invoke();
+            if (_canvasGroup)
+                _canvasGroup.blocksRaycasts = true;
+        }
+
+        private void RefreshPosition(PointerEventData eventData)
+        {
+            transform.position = eventData.position + _touchOffset;
+            var container = _dragLayer ? _dragLayer : (RectTransform)transform.parent;
+            ((RectTransform)transform).ClampRectPositionToContainer(container);
+        }
+
+        public void ReturnToOriginalPos()
+        {
+            if (_originalParent == null)
+                return;
+
+            transform.SetParent(_originalParent, true);
+            transform.position = _originalWorldPos;
+
+            if (_canvasGroup)
+                _canvasGroup.blocksRaycasts = true;
         }
     }
 }
