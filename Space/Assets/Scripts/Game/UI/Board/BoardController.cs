@@ -23,6 +23,15 @@ namespace SpaceGame
                 _slotViews[i].BindModel(_board.GetCard(i));
             }
         }
+        
+        public CardView GetView(int index)
+        {
+            if (index < 0 || index >= _slotViews.Count) return null;
+            var slot = _slotViews[index];
+            if (!slot) return null;
+
+            return slot.GetComponentInChildren<CardView>(true);
+        }
 
         private void OnDestroy()
         {

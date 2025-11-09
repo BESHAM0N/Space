@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,9 @@ namespace SpaceGame
 {
     public sealed class CardView : MonoBehaviour
     {
+        public Action<int> OnCardPoints;
+        
+        [Inject] private ISoundService _soundService;
         public ICard Card => _card;
 
         [SerializeField] private Image _image;
@@ -30,38 +34,53 @@ namespace SpaceGame
             _suitIcon.sprite = _suitIcons.GetIcon(card.Suit);
             _card = card;
         }
-
+        
+        private void CopyCard()
+        {
+            _image.sprite = _card.Image;
+            _titleText.text = _card.DisplayName;
+            _pointsText.text = _card.BasePoints.ToString();
+            _suitIcon.sprite = _suitIcons.GetIcon(_card.Suit);
+            
+            OnCardPoints?.Invoke(_card.BasePoints);
+        }
+    
         public void OnDestroyAnim()
         {
+            if (!_destroyAnim) return;
+            
             _destroyAnim.SetActive(true);
+            _soundService.Play(SoundType.Destroys);
         }
         
         public void OnBonusAnim()
         {
+            if (!_bonusAnim) return;
             _bonusAnim.SetActive(true);
+            _soundService.Play(SoundType.Bonus);
+            OnCardPoints?.Invoke(30);
         }
         
         public void OnNoneAnim()
         {
-            if (TryGetComponent<RectTransform>(out var rt))
-            {
-                var start = rt.anchoredPosition;
-                rt.DOAnchorPosY(start.y + 12, 0.25f * 0.5f)
-                    .SetLoops(2, LoopType.Yoyo)
-                    .SetEase(Ease.OutQuad);
-            }
-            else
-            {
-                var start = transform.localPosition;
-                transform.DOLocalMoveY(start.y + 12, 0.25f * 0.5f)
-                    .SetLoops(2, LoopType.Yoyo)
-                    .SetEase(Ease.OutQuad);
-            }
+            transform.DOKill();
+            transform.DOScale(Vector3.one * 1.1f, 0.3f * 0.5f)
+                .SetLoops(2, LoopType.Yoyo)
+                .SetEase(Ease.OutQuad);
+            _soundService.Play(SoundType.None);
+            OnCardPoints?.Invoke(_card.BasePoints);
         }
         
-        public void OnAbsorptionAnim()
+        public void OnAbsorptionAnim(float autoHideSeconds = 3f)
         {
+            if (!_absorptionAnim) return;
             _absorptionAnim.SetActive(true);
+            _soundService.Play(SoundType.Absorption);
+            DOVirtual.DelayedCall(autoHideSeconds, () =>
+            {
+                if (_absorptionAnim) _absorptionAnim.SetActive(false);
+                CopyCard();
+            });
         }
         
         public class Factory : PlaceholderFactory<CardView> { }
