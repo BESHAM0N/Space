@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9571b900a96640e39a5084c4137cd2a0, type: 3}
+  m_Name: AirS14
+  m_EditorClassIdentifier: 
+  Id: 14
+  DisplayName: Aerial Silks Dream
+  Description: 
+  image: {fileID: 0}
+  suit: 2
+  basePoints: 20
+  interactions:
+  - WithSuit: 0
+    InteractionType: 1
+    Value: 30
+  - WithSuit: 1
+    InteractionType: 3
+    Value: 0
+  - WithSuit: 2
+    InteractionType: 1
+    Value: 30
+  - WithSuit: 4
+    InteractionType: 2
+    Value: 0
+  - WithSuit: 3
+    InteractionType: 0
+    Value: 0
+  - WithSuit: 5
+    InteractionType: 2
+    Value: 0
