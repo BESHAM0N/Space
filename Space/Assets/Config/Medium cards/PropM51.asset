@@ -15,7 +15,7 @@ MonoBehaviour:
   Id: 51
   DisplayName: Hoops of Harmony
   Description: 
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: cf2191b935e486148975a0cf231fdbba, type: 3}
   suit: 5
   basePoints: 40
   interactions:

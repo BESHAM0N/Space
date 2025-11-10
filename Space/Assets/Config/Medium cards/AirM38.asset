@@ -15,7 +15,7 @@ MonoBehaviour:
   Id: 38
   DisplayName: Trapeze Romance
   Description: 
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: 7d25b7680b96c574bb1be3a63cf35671, type: 3}
   suit: 2
   basePoints: 40
   interactions:
