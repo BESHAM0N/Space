@@ -381,7 +381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c999a7190f34d269a27276f14f5a163, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cardViewPrefab: {fileID: 7392422000069033879, guid: 05bf570a346fe104aa9b19d1acb9a09a, type: 3}
+  _cardViewPrefab: {fileID: 7392422000069033879, guid: 4b53b74654dfed045b08e39499045ee3, type: 3}
   _handParent: {fileID: 1756082496}
   _prototypes: {fileID: 11400000, guid: 05880ffec963531449863fa4bf26a2f9, type: 2}
   _levelController: {fileID: 537913595}
