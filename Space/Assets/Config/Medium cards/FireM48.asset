@@ -15,7 +15,7 @@ MonoBehaviour:
   Id: 48
   DisplayName: Inferno Hoop Dive
   Description: 
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: 3b063983faf828f48942735156c14e62, type: 3}
   suit: 0
   basePoints: 40
   interactions:

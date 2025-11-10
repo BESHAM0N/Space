@@ -15,7 +15,7 @@ MonoBehaviour:
   Id: 15
   DisplayName: Aerial Silks Dream
   Description: 
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: bdad413ffde32e449be997f29c45c224, type: 3}
   suit: 2
   basePoints: 20
   interactions:
