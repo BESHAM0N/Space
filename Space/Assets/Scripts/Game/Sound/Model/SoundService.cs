@@ -14,6 +14,7 @@ namespace SpaceGame
         private readonly HashSet<SoundType> _bgmTypes;
         
         private const float EFFECTS_VOLUME = 0.3f;
+        private SoundType? _lastMusic;
 
         [Inject]
         public SoundService(SoundPlayer player)
@@ -46,6 +47,11 @@ namespace SpaceGame
             PlayerPrefs.SetInt(PREF_KEY, enabled ? 1 : 0);
             PlayerPrefs.Save();
             Apply(enabled);
+
+            if (enabled && _lastMusic.HasValue)
+            {
+                _player.PlayMusic(_lastMusic.Value);
+            }
         }
 
         private void Apply(bool enabled)
@@ -55,20 +61,33 @@ namespace SpaceGame
 
         public void Play(SoundType type, float volume = 0.2f, float pitch = 1f)
         {
-            if (!IsSoundEnabled) return;
+            // if (!IsSoundEnabled) return;
+            // if (_bgmTypes.Contains(type))
+            // {
+            //     _player.PlayMusic(type);
+            // }
+            // else
+            // {
+            //     _player.PlaySfx(type, EFFECTS_VOLUME, pitch);
+            // }
+            
             if (_bgmTypes.Contains(type))
             {
+                _lastMusic = type;
+                if (!IsSoundEnabled) return;     // не играем, но запомнили что хотели
                 _player.PlayMusic(type);
             }
             else
             {
+                if (!IsSoundEnabled) return;     // SFX глушим полностью, без очереди
                 _player.PlaySfx(type, EFFECTS_VOLUME, pitch);
             }
         }
 
         public void PlayLoop(SoundType type)
         {
-            if (!IsSoundEnabled) return;
+            _lastMusic = type;
+            if (!IsSoundEnabled) return;         // не играем сейчас, но запомнили
             _player.PlayMusic(type);
         }
 

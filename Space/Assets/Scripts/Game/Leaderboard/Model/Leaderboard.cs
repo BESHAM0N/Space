@@ -11,7 +11,7 @@ namespace SpaceGame
     {
         public event Action OnLoadLeaderboard;
         
-        private readonly string _leaderboardKey = "ef446c4219b3e7b3d23edddbc182f71ecd1d35fa0f181e2f33647219503f7547";
+        private readonly string _leaderboardKey = "55ae7efe633a340fda8a4b16bfac5871cb806e5615c1a81dc5ca28c4e5c51c75";
         private readonly Dictionary<string, int> _leaders = new(StringComparer.OrdinalIgnoreCase);
         private const string PLAYER_NAME_KEY = "PlayerName";
 

@@ -16,7 +16,7 @@ MonoBehaviour:
   DisplayName: Parrot Puzzle Parade
   Description: 
   image: {fileID: 21300000, guid: e9e8dbb0937de9948b4d28882b1194a0, type: 3}
-  suit: 4
+  suit: 3
   basePoints: 20
   interactions:
   - WithSuit: 0

@@ -13,13 +13,11 @@ namespace SpaceGame
         [SerializeField] private Button _menuButton;
         [SerializeField] private ScoreHud _scoreHud;
 
-        // public event Action RestartClicked;
         public event Action MenuClicked;
-
+        
         private void Awake()
         {
             if (_root) _root.SetActive(false);
-            // if (_restartButton) _restartButton.onClick.AddListener(() => RestartClicked?.Invoke());
             if (_menuButton) _menuButton.onClick.AddListener(() => MenuClicked?.Invoke());
         }
 

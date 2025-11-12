@@ -16,7 +16,7 @@ MonoBehaviour:
   DisplayName: Canine Carnival
   Description: 
   image: {fileID: 21300000, guid: dd3ad5d4e68a9c84a9921dfffe1240fd, type: 3}
-  suit: 4
+  suit: 3
   basePoints: 40
   interactions:
   - WithSuit: 0

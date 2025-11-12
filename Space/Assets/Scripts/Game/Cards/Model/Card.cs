@@ -11,6 +11,7 @@ namespace SpaceGame
         public Sprite Image { get; private set; }
         public ElementSuit Suit { get; private set; }
         public int BasePoints { get; private set; }
+        public bool IsDestroyed { get; set; }
 
         private readonly List<SuitInteractionRule> _interactions = new();
 

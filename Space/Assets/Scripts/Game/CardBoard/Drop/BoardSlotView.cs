@@ -53,7 +53,6 @@ namespace SpaceGame
             var ok = _controller.TryPlaceFromUI(_slotIndex, view);
             if (!ok)
             {
-                _arrow.SetActive(true);
                 drag.ReturnToOriginalPos();
             }
         }

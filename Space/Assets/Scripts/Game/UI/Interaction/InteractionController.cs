@@ -13,6 +13,7 @@ namespace SpaceGame
         [Header("UI")]
         [SerializeField] private Button _playButton;    // Начать шоу
         [SerializeField] private Button _finishButton;  // Закончить шоу
+        [SerializeField] private LevelController _levelController;
 
         [Header("Timings (seconds)")]
         [SerializeField] private float _noneDuration       = 0.35f;
@@ -27,6 +28,7 @@ namespace SpaceGame
         [Inject] private ILevelFlow _levelFlow;
         [Inject] private IScoreEvents _scoreEvents;
         [Inject] private GameEvents _gameEvents;
+        [Inject] private SoundPlayer _soundPlayer;
         private int _visualTotal;
         private readonly List<CardAnimEvent> _animBuffer = new();
         private Sequence _seq;
@@ -88,6 +90,8 @@ namespace SpaceGame
         // =============== КНОПКА 1 ===============
         private void PlayPresentation()
         {
+            _soundPlayer.PlaySfx(SoundType.ButtonClick);
+            
             if (_seq != null && _seq.IsActive() && _seq.IsPlaying())
                 return;
 
@@ -164,6 +168,7 @@ namespace SpaceGame
                 .OnComplete(() =>
                 {
                     _seq = null;
+                    GetLevelBonus();
                     SetUIStateWaitingFinish(); // показать кнопку "Закончить"
                 })
                 .Play();
@@ -172,6 +177,8 @@ namespace SpaceGame
         // =============== КНОПКА 2 ===============
         private void FinishPresentation()
         {
+            _soundPlayer.PlaySfx(SoundType.ButtonClick);
+            
             if (_seq != null && _seq.IsActive())
             {
                 _seq.Kill(true);
@@ -198,5 +205,31 @@ namespace SpaceGame
             CardAnimType.Absorption => _absorptionDuration,
             _ => 0.8f
         };
+
+        private void GetLevelBonus()
+        {
+            var levelSuit = _levelController.GetCurrentElement();
+            var board = _boardController.Board;
+            var count = board.SlotsCount;
+            int bonusTotal = 0;
+            
+            for (int i = 0; i < count; i++)
+            {
+                var card = board.GetCard(i);
+                if (card == null) continue;
+
+                if (card.Suit == levelSuit && !card.IsDestroyed)
+                {
+                    bonusTotal += 10;
+                }
+            }
+
+            if (bonusTotal > 0)
+            {
+                _visualTotal += bonusTotal;
+                _gameEvents.RaiseScoreChanged(_visualTotal);
+                Debug.Log($"Bonus +{bonusTotal} points for matching element {levelSuit}");
+            }
+        }
     }
 }

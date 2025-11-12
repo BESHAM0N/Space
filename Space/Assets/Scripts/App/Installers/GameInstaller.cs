@@ -17,7 +17,7 @@ namespace SpaceGame
             Container.BindInterfacesAndSelfTo<GameEvents>().AsSingle().NonLazy();
             LevelCircleInstaller.Install(Container, _levelController,_levelCompletePopupView,_gameCompletePopupView);
             FactoryInstaller.Install(Container, _cardViewPrefab, _handParent, _prototypes);
-            Container.BindInterfacesAndSelfTo<GameOverObserver>().AsSingle().NonLazy();
+            //Container.BindInterfacesAndSelfTo<GameOverObserver>().AsSingle().NonLazy();
             Container.BindInterfacesTo<ScoreHud>().FromComponentInHierarchy().AsSingle();
         }
     }

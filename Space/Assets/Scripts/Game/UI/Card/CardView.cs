@@ -48,7 +48,7 @@ namespace SpaceGame
         public void OnDestroyAnim()
         {
             if (!_destroyAnim) return;
-            
+            _card.IsDestroyed = true;
             _destroyAnim.SetActive(true);
             _soundService.Play(SoundType.Destroys);
         }

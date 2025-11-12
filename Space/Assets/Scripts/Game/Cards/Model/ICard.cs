@@ -16,7 +16,7 @@ namespace SpaceGame
         Sprite Image { get; }
         ElementSuit Suit { get; }
         int BasePoints { get; }
-        
+        bool IsDestroyed { get; set; }
         void InitializeFromPrototype(CardPrototype prototype);
 
         IReadOnlyList<SuitInteractionRule> GetInteractions();

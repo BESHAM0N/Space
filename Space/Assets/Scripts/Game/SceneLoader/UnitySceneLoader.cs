@@ -1,9 +1,15 @@
 ﻿using UnityEngine.SceneManagement;
+using Zenject;
 
 namespace SpaceGame
 {
     public class UnitySceneLoader: ISceneLoader
     {
-        public void LoadMainMenu() => SceneManager.LoadScene("MainMenu");
+        [Inject] private SoundPlayer _soundService;
+        public void LoadMainMenu()
+        {
+            _soundService.StopMusic();
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 }

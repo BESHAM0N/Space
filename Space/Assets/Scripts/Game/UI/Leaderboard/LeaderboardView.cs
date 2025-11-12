@@ -36,6 +36,7 @@ namespace SpaceGame
             _sound.PlayLoop(SoundType.MainMenuBackgroundMusic);
             _leaderboard.OnLoadLeaderboard += SetLeaderboard;
             _enterNameButton.onClick.AddListener(SetUsername);
+            _leaderboardNameInputField.onValueChanged.AddListener(FilterInput);
         }
 
         private void OnDisable()
@@ -43,6 +44,24 @@ namespace SpaceGame
             _sound.StopLoop();
             _leaderboard.OnLoadLeaderboard -= SetLeaderboard;
             _enterNameButton.onClick.RemoveListener(SetUsername);
+            _leaderboardNameInputField.onValueChanged.RemoveListener(FilterInput);
+        }
+        
+        private void FilterInput(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return;
+
+            // Разрешены: a-z, A-Z, 0-9, _
+            string filtered = new string(input.Where(c => 
+                (c >= 'A' && c <= 'Z') ||
+                (c >= 'a' && c <= 'z') ||
+                (c >= '0' && c <= '9') ||
+                c == '_'
+            ).ToArray());
+            
+            if (filtered != input)
+                _leaderboardNameInputField.text = filtered;
         }
 
         private void SetLeaderboard()
@@ -51,20 +70,16 @@ namespace SpaceGame
                 Destroy(child.gameObject);
             
             var playerName = _leaderboard.GetSavedPlayerName();
-
-            if (playerName != null)
+            
+            if (!string.IsNullOrEmpty(playerName))
             {
-                var myPoints = 0;
-                _leaderboard.GetLeaders().TryGetValue(playerName, out myPoints);
+                _leaderboard.GetLeaders().TryGetValue(playerName, out var myPoints);
                 _currentScoreText.text = $"My points: {myPoints}";
-                Debug.Log($"Name: {playerName}");
             }
             else
             {
-                Debug.LogWarning("No player named");
-                _currentScoreText.text = $"My points: 0";
+                _currentScoreText.text = "My points: 0";
             }
-            
             
             var ordered = _leaderboard.GetLeaders()
                 .OrderByDescending(kv => kv.Value)

@@ -71,18 +71,12 @@ namespace SpaceGame
         {
             _ui.Hide();
             BuildNewHand();
-            _levelController?.SetRandomLevelTheme();
-
-            Debug.Log($"Следующий уровень загружен. В колоде осталось: {_deck.RemainingCount}");
         }
         
         private void BuildNewHand()
         {
             _ui.Hide();
-
-            // Следующая тема
             _levelController?.SetRandomLevelTheme();
-           
             if (!TryBuildNewHand(10))
             {
                 EndGame();
@@ -94,8 +88,6 @@ namespace SpaceGame
 
         private void OnMenuClicked()
         {
-            _ui.Hide();
-            _gameEndUi?.Hide();
             _sceneLoader.LoadMainMenu();
         }
         
@@ -112,10 +104,10 @@ namespace SpaceGame
         
         private void EndGame()
         {
+            _ui.Hide();
             _hand.ClearHand();
             
             _soundService.StopLoop();
-            _soundService.Play(SoundType.FinishGame);
             _soundService.PlayLoop(SoundType.MainMenuBackgroundMusic);
 
             var total = _score.GetCurrentScore();
